@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for form-data (without files)
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'https://clock-view-rjj55wvgh-sujal402s-projects.vercel.app/'],
   credentials: true
 }));
 app.use(cookieParser());
