@@ -53,7 +53,7 @@ export const Login = async (req , res) => {
     
     try {
         // Find user by email
-    const user = await User.findOne({ email }).select('+password');
+        const user = await User.findOne({ email }).select('+password');
         if (!user) {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
@@ -65,27 +65,26 @@ export const Login = async (req , res) => {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
 
-    jwt.sign(
-      { user: { id: user.id } },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' },
-      (err, token) => {
-        if (err) throw err;
+        jwt.sign(
+          { user: { id: user.id } },
+          process.env.JWT_SECRET,
+          { expiresIn: '1h' },
+          (err, token) => {
+            if (err) throw err;
 
-        // Set JWT as an HttpOnly cookie
-        const cookieOptions = {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        };
+            // Set JWT as an HttpOnly cookie
+            const cookieOptions = {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'strict',
+              maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            };
 
-        res.cookie('token', token, cookieOptions);
-        // Send minimal user info in body
-        res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email } });
-      }
-    );
-
+            res.cookie('token', token, cookieOptions);
+            // Send minimal user info in body
+            res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email } });
+          }
+        );
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server error');

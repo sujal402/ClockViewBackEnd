@@ -1,4 +1,9 @@
 import Product from './productModel.js';
+import cloudinary from '../../utils/cloudinary.js';
+import streamifier from "streamifier";
+import dotenv from "dotenv";
+dotenv.config(); // MUST be first, before importing cloudinary
+
 
 export const createProduct = async (req, res) => {
   try {
@@ -19,10 +24,60 @@ export const createProduct = async (req, res) => {
       bodyMaterial,
       cost,
       remarks,
+      images,
+      videos,
     } = req.body;
 
-    // const images = req.files.images?.map(f => ({ url: `/uploads/${f.filename}` })) || [];
-    // const videos = req.files.videos?.map(f => ({ url: `/uploads/${f.filename}` })) || [];
+// console.log("Cloudinary cloudname :", process.env.CLOUDINARY_CLOUD_NAME);
+// console.log("cloudinary api key :",process.env.CLOUDINARY_API_KEY);
+// console.log("Cloudinary api secret :",process.env.CLOUDINARY_API_SECRET);
+
+
+    var imageLinks = [], videoLinks = [];
+    
+    if (req.files?.images) {
+      for (const file of req.files.images) {
+
+        console.log("In the imggggggggggg")
+
+        const uploadRes = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "products/images" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          );
+          streamifier.createReadStream(file.buffer).pipe(stream);
+        });
+
+        console.log("img upload ressssssssssssss",uploadRes);
+        imageLinks.push({
+          url: uploadRes.secure_url,
+          public_id: uploadRes.public_id,
+        });
+      }
+    }
+
+    if (req.files?.videos) {
+      for (const file of req.files.videos) {
+        const uploadRes = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "products/videos", resource_type: "video" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          );
+          streamifier.createReadStream(file.buffer).pipe(stream);
+        });
+
+        videoLinks.push({
+          url: uploadRes.secure_url,
+          public_id: uploadRes.public_id,
+        });
+      }
+    }
 
     const product = await Product.create({
       code,
@@ -38,8 +93,8 @@ export const createProduct = async (req, res) => {
       bodyMaterial,
       cost,
       remarks,
-      // images,
-      // videos,
+      imageUrl: imageLinks,
+      videoUrl: videoLinks,
     });
 
     res.status(201).json({ success: true, product });

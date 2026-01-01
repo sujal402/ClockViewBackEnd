@@ -101,6 +101,22 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+
+    // 1️⃣5️⃣ Image URL
+    imageUrl: [
+    {
+      url: { type: String, required: true },
+      public_id: { type: String, required: true },
+    }],
+
+    // 1️⃣6️⃣ Video URL
+    videoUrl: [
+    {
+      url: { type: String, required: true },
+      public_id: { type: String, required: true },
+    },
+  ],
+
   },
   { timestamps: true }
 );
