@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema(
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Password won't be returned by default in queries
     },
+    phone: {
+      type: String,
+      required: [false],
+      minlength: [10,'contact must be of 10 digit'],
+    },
+    address: {
+      type: String,
+      required: false,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

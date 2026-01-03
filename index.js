@@ -8,6 +8,7 @@ import cors from 'cors';
 import authRoutes from './api/auth/authRoute.js';
 import contactRoutes from './api/contact/contactRoute.js';
 import productRoutes from './api/products/productRoute.js';
+import userRoutes from './api/users/userRoute.js';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use(logger);
 app.use('/api/auth', authRoutes);
 app.use('/api/', contactRoutes);
 app.use('/api/product', productRoutes);
+app.use('/api/user',userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Clock Backend is running");
