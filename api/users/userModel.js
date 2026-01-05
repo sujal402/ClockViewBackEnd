@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    userRoll: { 
+      type: String,
+      enum: ['admin', 'customer'],
+      default: 'customer'
+    },
     createdAt: {
       type: Date,
       default: Date.now,

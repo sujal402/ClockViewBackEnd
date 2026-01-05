@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import User from '../users/userModel.js';
 
 export const Register = async (req, res) => {
-  const { username, email, password } = req.body;
-
+  const { username, email, password, userRoll} = req.body;
+  console.log("req body :",req.body);
   try { 
     // Check if user already exists in database
     let user = await User.findOne({ email });
@@ -17,6 +17,7 @@ export const Register = async (req, res) => {
       username,
       email,
       password,
+      userRoll
     });
 
     // Hash password
@@ -30,6 +31,7 @@ export const Register = async (req, res) => {
     const payload = {
       user: {
         id: user.id,
+        userRoll: user.userRoll
       },
     };
 
@@ -49,7 +51,8 @@ export const Register = async (req, res) => {
 };
 
 export const Login = async (req , res) => {
-    const { email, password } = req.body;
+    const { email, password} = req.body;
+    console.log("req body for login:",req.body);
     
     try {
         // Find user by email
@@ -65,8 +68,10 @@ export const Login = async (req , res) => {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
 
+        console.log("user :",user);
+
         jwt.sign(
-          { user: { id: user.id } },
+          { user: { id: user.id ,userRoll: user.userRoll } },
           process.env.JWT_SECRET,
           { expiresIn: '1h' },
           (err, token) => {
