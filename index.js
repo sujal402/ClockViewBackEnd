@@ -9,6 +9,7 @@ import authRoutes from './api/auth/authRoute.js';
 import contactRoutes from './api/contact/contactRoute.js';
 import productRoutes from './api/products/productRoute.js';
 import userRoutes from './api/users/userRoute.js';
+import cartRoutes from './api/cart/cartRoute.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/', contactRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/user',userRoutes);
+app.use('/api', cartRoutes);
 
 app.get("/", (req, res) => {
   res.send("Clock Backend is running");
