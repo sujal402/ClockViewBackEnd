@@ -12,13 +12,18 @@ export const Register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists. Please login' });
     }
 
-    // Create new user
-    user = new User({
-      username,
-      email,
-      password,
-      userRoll
-    });
+    if (!req.body.userRoll) {
+  delete req.body.userRoll;
+}
+
+
+   user = new User({
+  username,
+  email,
+  password,
+  userRoll: userRoll || 'customer'
+});
+
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
