@@ -87,7 +87,7 @@ export const Login = async (req , res) => {
 
             res.cookie('token', token, cookieOptions);
             // Send minimal user info in body
-            res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email } });
+            res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email, userRoll: user.userRoll, username: user.username } });
           }
         );
     } catch (error) {
